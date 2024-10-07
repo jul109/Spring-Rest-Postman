@@ -11,7 +11,7 @@ public class Student {
     private String lastName;
     
     public Student() {
-        // Default constructor
+        
     }
 
    
