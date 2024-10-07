@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
-import com.example.demo.repositories.UserRepository;
+
+import com.example.demo.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,11 +28,12 @@ import org.springframework.data.domain.AuditorAware;
 @RequiredArgsConstructor
 
 public class ApplicationConfig {
+
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> userRepository.findByUsername(username)
+        return username -> userService.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found"));
     }
 

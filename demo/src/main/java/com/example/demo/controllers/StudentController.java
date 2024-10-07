@@ -83,17 +83,14 @@ public class StudentController {
     @DeleteMapping("/student/{firstName}")
     public ResponseEntity<Void> deleteStudent(@PathVariable("firstName") String firstName) {
         boolean flag=false;
-        for (Student student : students) {
-            if (student.getFistName().equals(firstName)) {
-                students.remove(student);
-                flag=true;
-            }
-        }
-        if (!flag){
+        boolean removed = students.removeIf(student -> student.getFistName().equals(firstName));
+
+        if (!removed) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok().build();
+
 
     }
 

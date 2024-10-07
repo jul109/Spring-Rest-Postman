@@ -1,4 +1,4 @@
-package com.example.demo.services;
+package com.example.demo.services.impl;
 
 import com.example.demo.config.AuthenticationRequest;
 import com.example.demo.config.AuthenticationResponse;
@@ -6,8 +6,8 @@ import com.example.demo.config.JwtService;
 import com.example.demo.config.RegisterRequest;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
-import com.example.demo.repositories.UserRepository;
-import lombok.NoArgsConstructor;
+
+import com.example.demo.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+    @Autowired
+    private UserService userService;
 
-    private final UserRepository userRepository;
+
 
     private final PasswordEncoder passwordEncoder;
 
@@ -37,7 +39,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        userRepository.save(user);
+        userService.save(user);
         var token = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .accessToken(token)
@@ -49,7 +51,7 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()));
-        var user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        var user = userService.findByUsername(request.getUsername()).orElseThrow();
         var token = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()

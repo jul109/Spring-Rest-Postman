@@ -4,6 +4,7 @@ package com.example.demo.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +33,7 @@ public class SecurityConfiguration {
                .csrf(AbstractHttpConfigurer::disable)
                .authorizeHttpRequests(req ->
                        req.requestMatchers("/register", "/authenticate","/", "/helloWorld","/test").permitAll()
+                               .requestMatchers(HttpMethod.DELETE, "/student/**").hasAnyAuthority(USER.name())
                                .requestMatchers("/students","/student","/student/**").hasAnyAuthority(USER.name())
                                .anyRequest()
                                .authenticated()
